@@ -7,12 +7,17 @@ function getRepoContributors(repoOwner, repoName, callback) {
 	var options = {
 	  url: `https://${GITHUB_USER}:${GITHUB_TOKEN}@api.github.com/repos/${repoOwner}/${repoName}/contributors`,
 	  headers: {
-	    'User-Agent': 'request'
+	    'User-Agent': 'GitHub Avatar Downloader - Student Project'
 		}
 	};
 	request.get(options,(err,response,body) => {
-		callback(err,body);
+		callback(err,JSON.parse(body));
 	});
 }
 
-getRepoContributors("jquery","jquery");
+getRepoContributors("jquery","jquery",(err,contributors) => {
+	if (err) throw err;
+	contributors.forEach((contributor) => {
+		console.log(contributor.avatar_url);
+	})
+});
