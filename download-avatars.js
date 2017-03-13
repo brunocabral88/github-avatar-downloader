@@ -1,6 +1,6 @@
 var request = require('request');
 var fs = require('fs');
-var env = require('env').config();
+var env = require('dotenv').config();
 var GITHUB_USER = process.env.GITHUB_USER;
 var GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
@@ -11,6 +11,11 @@ if (!user || !repo) {
 	console.error('Please provide both a user and the repo!');
 	return -1;
 }
+if (!fs.existsSync('.env') || !GITHUB_TOKEN || !GITHUB_USER) {
+	console.error('.env file not found or missing information..');
+	return -1;
+}
+
 
 function getRepoContributors(repoOwner, repoName, callback) {
 	var options = {
@@ -20,6 +25,10 @@ function getRepoContributors(repoOwner, repoName, callback) {
 		}
 	};
 	request.get(options,(err,response,body) => {
+		if (JSON.parse(body).message === "Bad credentials") {
+			console.error('Bad credentials entered, plese review your .env file');
+			return -1;
+		}
 		callback(err,JSON.parse(body));
 	});
 }
@@ -44,7 +53,6 @@ function downloadImageByURL(url, filePath) {
 }
 
 getRepoContributors(user,repo,(err,contributors) => {
-	if (err) throw err;
 	contributors.forEach((contributor) => {
 		downloadImageByURL(contributor.avatar_url,`avatars/${contributor.login}.jpg`);
 	})
