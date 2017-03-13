@@ -1,8 +1,8 @@
 var request = require('request');
 var fs = require('fs');
-
-var GITHUB_USER = 'bruno.cabral88@hotmail.com';
-var GITHUB_TOKEN = '07761747cb01295b5346c5bb5aba07f5c8d35a55';
+var env = require('env').config();
+var GITHUB_USER = process.env.GITHUB_USER;
+var GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
 var user = process.argv[2];
 var repo = process.argv[3];
