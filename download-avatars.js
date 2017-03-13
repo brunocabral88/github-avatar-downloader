@@ -4,6 +4,9 @@ var fs = require('fs');
 var GITHUB_USER = 'bruno.cabral88@hotmail.com';
 var GITHUB_TOKEN = '07761747cb01295b5346c5bb5aba07f5c8d35a55';
 
+var user = process.argv[2];
+var repo = process.argv[3];
+
 function getRepoContributors(repoOwner, repoName, callback) {
 	var options = {
 	  url: `https://${GITHUB_USER}:${GITHUB_TOKEN}@api.github.com/repos/${repoOwner}/${repoName}/contributors`,
@@ -35,7 +38,7 @@ function downloadImageByURL(url, filePath) {
 	request.get(options).pipe(fs.createWriteStream(filePath,fileOptions));
 }
 
-getRepoContributors("jquery","jquery",(err,contributors) => {
+getRepoContributors(user,repo,(err,contributors) => {
 	if (err) throw err;
 	contributors.forEach((contributor) => {
 		downloadImageByURL(contributor.avatar_url,`avatars/${contributor.login}.jpg`);
